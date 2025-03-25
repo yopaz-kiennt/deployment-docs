@@ -42,13 +42,16 @@
 - `curl -sS https://getcomposer.org/installer | php`
 - `sudo mv composer.phar /usr/local/bin/composer`
 - `composer --version`
-7. Set up the Laravel project
+8. Using Swap to avoid ram overflow (Optional)
+- `https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7#check-available-storage-space`
+9. Set up the Laravel project
 - Create a ssh key
   - `ssh-keygen`
   - `cat ~/.ssh/id_rsa.pub` // copy the public key
 - Set up the public key to Github
 - `sudo chown -R "$USER":"$USER" /var/www`
 - Clone the repo to the folder `/var/www`
+- Cd to the project
 - Checkout to the branch you need
 - `composer i`
 - `cp .env.example .env`
@@ -58,4 +61,40 @@
 - `php artisan db:seed`
 - `pnpm i` or `npm i`
 - `pnpm run build` or `npm run build`
-- 
+- `cd /etc/nginx/conf.d`
+- `sudo nano [app_name].conf`
+  - ```
+    server {
+        listen 80;
+        server_name app_name.com;
+        root /var/www/app_name/public;
+    
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-Content-Type-Options "nosniff";
+    
+        index index.php;
+    
+        charset utf-8;
+    
+        location / {
+            try_files $uri $uri/ /index.php?$query_string;
+        }
+    
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+    
+    
+        location ~ \.php$ {
+            fastcgi_pass unix:/var/run/php-fpm/www.sock;
+            fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+            include fastcgi_params;
+        }
+    
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+    }
+    ```
+- `sudo systemctl restart nginx`
+- Cd to the project
+- `sudo chown -R nginx:nginx storage`

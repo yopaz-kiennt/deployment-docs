@@ -62,6 +62,7 @@
 - `npm run build` OR `pnpm run build`
 - `cd /etc/nginx/conf.d`
 - `sudo nano {web_name}.conf`
+  
   - ```
     server {
         listen 80;

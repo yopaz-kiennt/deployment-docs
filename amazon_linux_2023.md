@@ -102,7 +102,7 @@
 - Cd to the project
 - `sudo chown -R nginx:nginx storage`
 - `sudo chmod -R 777 storage` (optional)
-9. Install Certbot: 
+9. Install Certbot (HTTPS): 
 - `sudo dnf install -y certbot python3-certbot-nginx`
 - `sudo systemctl daemon-reload`
 - `sudo systemctl enable --now certbot-renew.timer`

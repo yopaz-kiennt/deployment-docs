@@ -1,10 +1,11 @@
-1. Install Nginx:
+**1. Install Nginx:**
 - `sudo dnf update`
 - `sudo dnf install -y nginx`
 - `sudo systemctl start nginx.service`
 - `sudo systemctl status nginx.service`
 - `sudo systemctl enable nginx.service`
-2. Install PHP:
+  
+**2. Install PHP:**
 - `sudo dnf install php8.2 -y`
 - `php -v`
 - `php-fpm -v`
@@ -14,7 +15,8 @@
   - `group = nginx`
 - `sudo systemctl start php-fpm`
 - `sudo systemctl restart nginx`
-3. Install MySQL:
+
+**3. Install MySQL:**
 - `sudo wget https://dev.mysql.com/get/mysql80-community-release-el9-3.noarch.rpm`
 - `sudo dnf install mysql80-community-release-el9-3.noarch.rpm`
 - `sudo dnf update`
@@ -25,7 +27,8 @@
 - `sudo grep 'temporary password' /var/log/mysqld.log` // get temporary password
 - `sudo mysql_secure_installation -p`
 - `mysql -u root -p`
-4. Install Node.js:
+
+**4. Install Node.js:**
 - `sudo dnf update`
 - `sudo curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -`
 - `sudo dnf install nodejs`
@@ -34,16 +37,20 @@
 - `curl -fsSL https://get.pnpm.io/install.sh | sh -`
 - `source /home/"$USER"/.bashrc`
 - `pnpm -v`
-5. Install Git:
+
+**5. Install Git:**
 - `sudo dnf install git`
-6. Install Composer:
+
+**6. Install Composer:**
 - `sudo dnf update`
 - `curl -sS https://getcomposer.org/installer | php`
 - `sudo mv composer.phar /usr/local/bin/composer`
 - `composer --version`
-7. Using Swap to avoid RAM overflow (Optional):
+
+**7. Using Swap to avoid RAM overflow (Optional):**
 - Docs: `https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-centos-7`
-8. Set up the Laravel project:
+
+**8. Set up the Laravel project:**
 - Create a ssh key:
   - `ssh-keygen`
   - `cat ~/.ssh/id_rsa.pub` // copy the public key
@@ -99,11 +106,47 @@
     }
     ```
 - `sudo systemctl restart nginx`
-- Cd to the project
-- `sudo chown -R nginx:nginx storage`
-- `sudo chmod -R 777 storage` (optional)
-9. Install Certbot (HTTPS): 
+
+**9. Install Certbot (HTTPS):**
 - `sudo dnf install -y certbot python3-certbot-nginx`
 - `sudo systemctl daemon-reload`
 - `sudo systemctl enable --now certbot-renew.timer`
 - `sudo certbot --nginx`
+
+**10. Install Supervisor (Queue):**
+- `sudo dnf install python3 python3-pip`
+- `sudo pip install supervisor`
+- `echo_supervisord_conf | sudo tee /etc/supervisor/supervisord.conf`
+- `cd /etc/supervisor`
+- `sudo mkdir conf.d`
+- `sudo nano {web_repo_name}-worker.conf`
+
+  - ```
+    [program:{web_repo_name}-worker]
+    process_name=%(program_name)s_%(process_num)02d
+    command=php /var/www/{web_repo_name}/artisan queue:listen
+    autostart=true
+    autorestart=true
+    stopasgroup=true
+    killasgroup=true
+    user=nginx
+    numprocs=2
+    redirect_stderr=true
+    stdout_logfile=/var/www/{web_repo_name}/storage/logs/worker.log
+    stopwaitsecs=3600
+    ```
+- `sudo nano supervisord.conf`
+
+  - ```
+    [include]
+    files = /etc/supervisor/conf.d/*.conf
+    ```
+- `sudo supervisord -c /etc/supervisor/supervisord.conf`
+- `sudo supervisorctl reread`
+- `sudo supervisorctl update`
+- `sudo supervisorctl start "{web_repo_name}-worker:*"`
+
+**11. Storage Permission**
+- Cd to the project
+- `sudo chown -R nginx:nginx storage`
+- `sudo chmod -R 777 storage` (optional)

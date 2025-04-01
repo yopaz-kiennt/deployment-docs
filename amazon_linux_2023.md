@@ -111,14 +111,16 @@
 - `sudo dnf install -y certbot python3-certbot-nginx`
 - `sudo systemctl daemon-reload`
 - `sudo systemctl enable --now certbot-renew.timer`
-- `sudo certbot --nginx`
+- `sudo certbot --nginx -d {web_domain}`
 
 **10. Install Supervisor (Queue):**
 - `sudo dnf install python3 python3-pip`
 - `sudo pip install supervisor`
+- `sudo mkdir /etc/supervisor`
 - `echo_supervisord_conf | sudo tee /etc/supervisor/supervisord.conf`
 - `cd /etc/supervisor`
 - `sudo mkdir conf.d`
+- `cd conf.d`
 - `sudo nano {web_repo_name}-worker.conf`
 
   - ```

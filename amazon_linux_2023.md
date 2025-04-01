@@ -106,6 +106,9 @@
     }
     ```
 - `sudo systemctl restart nginx`
+- Cd to the project
+- `sudo chown -R nginx:nginx storage`
+- `sudo chmod -R 777 storage` (optional)
 
 **9. Install Certbot (HTTPS):**
 - `sudo dnf install -y certbot python3-certbot-nginx`
@@ -147,8 +150,3 @@
 - `sudo supervisorctl reread`
 - `sudo supervisorctl update`
 - `sudo supervisorctl start "{web_repo_name}-worker:*"`
-
-**11. Storage Permission**
-- Cd to the project
-- `sudo chown -R nginx:nginx storage`
-- `sudo chmod -R 777 storage` (optional)

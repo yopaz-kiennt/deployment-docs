@@ -67,8 +67,8 @@
     server {
         listen 80;
         listen [::]:80;
-        server_name {web_domain_or_ip};
-        root /var/www/{web_name}/public;
+        server_name {web_domain} www.{web_domain};
+        root /var/www/{web_repo_name}/public;
     
         add_header X-Frame-Options "SAMEORIGIN";
         add_header X-Content-Type-Options "nosniff";
@@ -101,3 +101,9 @@
 - `sudo systemctl restart nginx`
 - Cd to the project
 - `sudo chown -R nginx:nginx storage`
+- `sudo chmod -R 777 storage` (optional)
+9. Install Certbot: 
+- `sudo dnf install -y certbot python3-certbot-nginx`
+- `sudo systemctl daemon-reload`
+- `sudo systemctl enable --now certbot-renew.timer`
+- `sudo certbot --nginx`

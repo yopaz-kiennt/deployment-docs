@@ -56,7 +56,7 @@
 - Create a ssh key:
   - `ssh-keygen`
   - `cat ~/.ssh/id_rsa.pub` // copy the public key
-- Set up the public key to GitHub:
+- Set up the public key to GitHub
 - `sudo chown -R "$USER":"$USER" /var/www`
 - Clone the repo to the folder `/var/www`
 - Cd to the project

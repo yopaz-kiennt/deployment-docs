@@ -1,3 +1,5 @@
+# Amazon Linux 2023
+
 **1. Install Nginx:**
 - `sudo dnf update`
 - `sudo dnf install -y nginx`

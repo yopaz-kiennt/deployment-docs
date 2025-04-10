@@ -94,3 +94,5 @@
 - `sudo ln -s /etc/nginx/sites-available/{web_name} /etc/nginx/sites-enabled/`
 - `sudo nginx -t`
 - `sudo systemctl reload nginx`
+- `sudo chown -R www-data:www-data storage`
+- `sudo chmod -R 777 storage` (optional)

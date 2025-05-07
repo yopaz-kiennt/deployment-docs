@@ -14,4 +14,4 @@
 - `sudo percona-release enable tools release`
 - `sudo dnf install -y percona-toolkit`
 - `pt-query-digest --version`
-- 
+- `pt-query-digest /var/log/mysql/slow.log`
